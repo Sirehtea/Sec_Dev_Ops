@@ -24,6 +24,11 @@ jobs:
         with:
           python-version: "3.10"
 
+      # Upgrade setuptools to a secure version
+      - name: Upgrade setuptools
+        run: |
+          pip install --upgrade setuptools
+
       # Install dependencies
       - name: Install dependencies
         run: |
