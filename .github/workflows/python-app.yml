@@ -54,5 +54,7 @@ jobs:
 
       # Detect secrets using truffleHog
       - name: Detect secrets
-        run: pip install truffleHog && trufflehog filesystem .
+        run: |
+          pip install truffleHog
+          trufflehog --repo_path . filesystem
 
