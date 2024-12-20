@@ -1,0 +1,53 @@
+# This workflow will install Python dependencies, run tests and lint with a single version of Python
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-python
+
+name: Secure Pipeline
+
+on:
+  pull_request:
+    branches: [ 'main', 'dev' ]
+  schedule:
+    - cron: "0 0 * * 0"  # Weekly SAST scan
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checkout the repository
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # Set up Python
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.10
+
+      # Install dependencies
+      - name: Install dependencies
+        run: |
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+
+      # Run unit tests
+      - name: Run tests
+        run: |
+          python -m unittest discover
+
+      # Run SAST scan using CodeQL
+      - name: Run CodeQL analysis
+        uses: github/codeql-action/init@v2
+        with:
+          languages: python
+
+      - name: Perform CodeQL analysis
+        uses: github/codeql-action/analyze@v2
+
+      # Check for vulnerable dependencies using pip-audit
+      - name: Audit dependencies
+        run: pip install pip-audit && pip-audit
+
+      # Detect secrets using truffleHog
+      - name: Detect secrets
+        run: pip install truffleHog && trufflehog filesystem .
+
