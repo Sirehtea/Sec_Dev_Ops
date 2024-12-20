@@ -51,11 +51,10 @@ jobs:
           pip install pip-audit
           pip-audit
 
-      # Detect secrets using truffleHog
       - name: Detect secrets
         run: |
           pip install truffleHog
-          trufflehog filesystem --json . | tee trufflehog_output.json
+          trufflehog https://github.com/Sirehtea/Sec_Dev_Ops --json
 
       # Upload the results of truffleHog as artifacts
       - name: Upload truffleHog output
