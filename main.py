@@ -1,1 +1,2 @@
-print("Hello World") #test test test test test
+user_input = "os.system('ls')"
+eval(user_input)
