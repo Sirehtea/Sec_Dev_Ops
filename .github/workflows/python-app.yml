@@ -51,15 +51,8 @@ jobs:
           pip install pip-audit
           pip-audit
 
-      - name: Detect secrets in main.py
-        run: |
-          pip install truffleHog
-          trufflehog . --max_depth 10 --json --include_paths main.py
-
-
-      # Upload the results of truffleHog as artifacts
-      - name: Upload truffleHog output
-        uses: actions/upload-artifact@v3
+      # Run TruffleHog scan for secrets detection
+      - name: Scan secrets with TruffleHog
+        uses: edplato/trufflehog-actions-scan@master
         with:
-          name: trufflehog-results
-          path: trufflehog_output.json
+          github_token: ${{ secrets.GITHUB_TOKEN }}
